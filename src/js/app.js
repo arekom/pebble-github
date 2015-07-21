@@ -19,8 +19,7 @@ var splashCard = new UI.Card({
     title: 'Please Wait',
     body: 'Loading request...',
     bodyColor: 'tiffanyBlue',
-    titleColor: 'orange',
-    font: 'GOTHIC_14'
+    titleColor: 'orange'
 });
 splashCard.show();
 
@@ -46,8 +45,8 @@ ajax({
 
     resultList.on('select', function(e) {
         var details = new UI.Card({
-            title: 'Details for:',
-            body: json[e.itemIndex].name
+            title: json[e.itemIndex].name,
+            body: json[e.itemIndex].full_name + '\n' + json[e.itemIndex].description
         });
         details.show();
     });
