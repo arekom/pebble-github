@@ -3,7 +3,7 @@ Pebble + GitHub API
 
 ## Demo
 
-![demo image](http://g.recordit.co/ZZdH6Wc77h.gif)
+![demo image](http://g.recordit.co/TTSAwcY7yd.gif)
 
 ## About
 
