@@ -1,5 +1,20 @@
 var UI = require('ui');
 var ajax = require('ajax');
+
+var parseFeed = function(json) {
+    var items = [];
+    for (var i = 0; i < json.length; i++) {
+        var title = json[i].name;
+        var subtitle = json[i].description;
+
+        items.push({
+            title: title,
+            subtitle: subtitle
+        });
+    };
+    return items;
+}
+
 var splashCard = new UI.Card({
     title: 'Please Wait',
     body: 'Loading request...',
@@ -15,6 +30,7 @@ ajax({
     url: URL,
     type: 'json'
 }, function(json) {
+    var menuItems = parseFeed(json, 10);
     var resultList = new UI.Menu({
         backgroundColor: 'tiffanyBlue',
         textColor: 'orange',
@@ -22,16 +38,7 @@ ajax({
         highlightTextColor: 'black',
         sections: [{
             title: 'Repositories',
-            items: [{
-                title: json[0].name,
-                subtitle: json[0].description
-            }, {
-                title: json[1].name,
-                subtitle: json[1].description
-            }, {
-                title: json[2].name,
-                subtitle: json[3].description
-            }]
+            items: menuItems
         }]
     });
     resultList.show();
@@ -43,7 +50,8 @@ ajax({
             body: json[e.itemIndex].name
         });
         details.show();
-    })
+    });
+
 
 }, function(error) {
     console.log('Loading failed: ' + error);
