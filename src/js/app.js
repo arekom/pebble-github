@@ -16,7 +16,10 @@ ajax({
     type: 'json'
 }, function(json) {
     var resultList = new UI.Menu({
-        font: 'GOTHIC_14',
+        backgroundColor: 'tiffanyBlue',
+        textColor: 'orange',
+        highlightBackgroundColor: 'electricBlue',
+        highlightTextColor: 'black',
         sections: [{
             title: 'Repositories',
             items: [{
