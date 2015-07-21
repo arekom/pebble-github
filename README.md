@@ -1,4 +1,4 @@
-Pebble + GitHub APi
+Pebble + GitHub API
 =========
 
 ## Demo
