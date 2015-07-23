@@ -1,57 +1,115 @@
-var UI = require('ui');
-var ajax = require('ajax');
+// check if ready
+Pebble.addEventListener('ready', function(e) {
+    var address = 'https://api.github.com/users/arekom/';
 
-var parseFeed = function(json) {
-    var items = [];
-    for (var i = 0; i < json.length; i++) {
-        var title = json[i].name;
-        var subtitle = json[i].description;
+    var UI = require('ui');
+    var ajax = require('ajax');
 
-        items.push({
-            title: title,
-            subtitle: subtitle
-        });
-    };
-    return items;
-}
+    var splashCard = new UI.Card({
+        banner: 'images/github.png',
+        bodyColor: 'tiffanyBlue'
+    });
+    splashCard.show();
 
-var splashCard = new UI.Card({
-    title: 'Please Wait',
-    body: 'Loading request...',
-    bodyColor: 'tiffanyBlue',
-    titleColor: 'orange'
-});
-splashCard.show();
-
-var URL = 'https://api.github.com/users/arekom/repos';
-
-ajax({
-    url: URL,
-    type: 'json'
-}, function(json) {
-    var menuItems = parseFeed(json, 10);
-    var resultList = new UI.Menu({
+    var mainMemnu = new UI.Menu({
         backgroundColor: 'tiffanyBlue',
-        textColor: 'orange',
-        highlightBackgroundColor: 'electricBlue',
-        highlightTextColor: 'black',
+        textColor: 'black',
+        highlightTextColor: 'white',
         sections: [{
-            title: 'Repositories',
-            items: menuItems
+            title: 'Main Menu',
+            items: [{
+                title: 'Followers',
+                icon: 'images/followers.png'
+            }, {
+                title: 'Repositories',
+                icon: 'images/repos.png'
+            }, {
+                title: 'Notifications',
+                icon: 'images/email.png'
+            }, {
+                title: 'Settings',
+                icon: 'images/settings.png'
+            }]
         }]
-    });
-    resultList.show();
-    splashCard.hide();
+    })
 
-    resultList.on('select', function(e) {
-        var details = new UI.Card({
-            title: json[e.itemIndex].name,
-            body: json[e.itemIndex].full_name + '\n' + json[e.itemIndex].description
+    setTimeout(function() {
+        splashCard.hide();
+        mainMemnu.show();
+    }, 1000)
+
+    mainMemnu.on('select', function(e) {
+        if (e.itemIndex === 0) {
+            getFollowers();
+        } else if (e.itemIndex === 1) {
+            getRepositories();
+        }
+    });
+
+    function getFollowers() {
+        var followersURL = address + 'followers';
+        ajax({
+            url: followersURL,
+            type: 'json'
+        }, function(json) {
+            var followResultList = new UI.Menu({
+                backgroundColor: 'tiffanyBlue',
+                textColor: 'orange',
+                highlightBackgroundColor: 'electricBlue',
+                highlightTextColor: 'black',
+                sections: [{
+                    title: 'Followers',
+                    items: [{
+                        title: json[0].login
+                    }]
+                }]
+            });
+            followResultList.show();
+        }, function(error) {
+            console.log('Loading failed: ' + error);
         });
-        details.show();
-    });
+    }
 
+    function getRepositories() {
+        var reposURL = address + 'repos';
+        var parseFeed = function(json) {
+            var items = [];
+            for (var i = 0; i < json.length; i++) {
+                var title = json[i].name;
+                var subtitle = json[i].description;
 
-}, function(error) {
-    console.log('Loading failed: ' + error);
-});
+                items.push({
+                    title: title,
+                    subtitle: subtitle
+                });
+            };
+            return items;
+        }
+        ajax({
+            url: reposURL,
+            type: 'json'
+        }, function(json) {
+            var menuItems = parseFeed(json, 10);
+            var repoResultList = new UI.Menu({
+                backgroundColor: 'tiffanyBlue',
+                textColor: 'orange',
+                highlightBackgroundColor: 'electricBlue',
+                highlightTextColor: 'black',
+                sections: [{
+                    title: 'Repositories',
+                    items: menuItems
+                }]
+            });
+            repoResultList.on('select', function(e) {
+                var details = new UI.Card({
+                    title: json[e.itemIndex].name,
+                    body: json[e.itemIndex].full_name + '\n' + json[e.itemIndex].description
+                });
+                details.show();
+            });
+            repoResultList.show();
+        }, function(error) {
+            console.log('Loading failed: ' + error);
+        });
+    }
+})
