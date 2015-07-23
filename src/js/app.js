@@ -1,6 +1,7 @@
 // check if ready
 Pebble.addEventListener('ready', function(e) {
     var address = 'https://api.github.com/users/arekom/';
+    var access = '?client_id=TEST&client_secret=ONLY';
 
     var UI = require('ui');
     var ajax = require('ajax');
@@ -43,20 +44,27 @@ Pebble.addEventListener('ready', function(e) {
             getFollowers();
         } else if (e.itemIndex === 1) {
             getRepositories();
+        } else if (e.itemIndex === 2) {
+            Pebble.showSimpleNotificationOnPebble('Push event!', 'dotnick pushed to [base] #372961');
+        } else {
+            var other = new UI.Card({
+                title: 'Boilerplate',
+                body: 'Random card body'
+            });
+            other.show();
         }
     });
 
     function getFollowers() {
-        var followersURL = address + 'followers';
+        var followersURL = address + 'followers' + access;
         ajax({
             url: followersURL,
             type: 'json'
         }, function(json) {
             var followResultList = new UI.Menu({
                 backgroundColor: 'tiffanyBlue',
-                textColor: 'orange',
-                highlightBackgroundColor: 'electricBlue',
-                highlightTextColor: 'black',
+                textColor: 'black',
+                highlightTextColor: 'white',
                 sections: [{
                     title: 'Followers',
                     items: [{
@@ -71,7 +79,7 @@ Pebble.addEventListener('ready', function(e) {
     }
 
     function getRepositories() {
-        var reposURL = address + 'repos';
+        var reposURL = address + 'repos' + access;
         var parseFeed = function(json) {
             var items = [];
             for (var i = 0; i < json.length; i++) {
@@ -92,9 +100,8 @@ Pebble.addEventListener('ready', function(e) {
             var menuItems = parseFeed(json, 10);
             var repoResultList = new UI.Menu({
                 backgroundColor: 'tiffanyBlue',
-                textColor: 'orange',
-                highlightBackgroundColor: 'electricBlue',
-                highlightTextColor: 'black',
+                textColor: 'black',
+                highlightTextColor: 'white',
                 sections: [{
                     title: 'Repositories',
                     items: menuItems

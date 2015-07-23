@@ -1,6 +1,10 @@
 Pebble + GitHub API
 =========
 
+<center>
+<img src="http://i.imgur.com/W89D4Js.gif" alt="Demo Gif" style="width: 100px;">
+</center>
+
 ## Updates
 
 - *soon* : notifications & settings panels.
