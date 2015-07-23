@@ -1,9 +1,13 @@
 Pebble + GitHub API
 =========
 
-## Demo
+## Updates
 
-![demo image](http://g.recordit.co/TTSAwcY7yd.gif)
+- *soon* : notifications & settings panels.
+
+- *v1.1* : Added more colorful and detailed menu system, besides repositories now you can see all your followers.
+
+- *v1.0* : Added simple menu, one option for now -> see the list of your public repositories.
 
 ## About
 
