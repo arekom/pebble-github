@@ -7,7 +7,7 @@ Pebble + GitHub API
 
 ## Updates
 
-- *soon* : notifications & settings panels.
+- *updates* : notifications added for testing, "shake to update" next.
 
 - *v1.1* : Added more colorful and detailed menu system, besides repositories now you can see all your followers.
 
