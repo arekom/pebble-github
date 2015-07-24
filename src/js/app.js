@@ -1,7 +1,7 @@
 // check if ready
 Pebble.addEventListener('ready', function(e) {
     var address = 'https://api.github.com/users/arekom/';
-    var access = '?client_id=c23c8c057bafa21237f5&client_secret=6a76da1cf8bab19f90fe23eb9f6f9a32207e34ec';
+    var access = '?client_id=ITS&client_secret=GONE';
 
     var UI = require('ui');
     var ajax = require('ajax');
