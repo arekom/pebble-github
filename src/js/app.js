@@ -1,10 +1,12 @@
 // check if ready
 Pebble.addEventListener('ready', function(e) {
     var address = 'https://api.github.com/users/arekom/';
-    var access = '?client_id=TEST&client_secret=ONLY';
+    var access = '?client_id=c23c8c057bafa21237f5&client_secret=6a76da1cf8bab19f90fe23eb9f6f9a32207e34ec';
 
     var UI = require('ui');
     var ajax = require('ajax');
+    var accel = require('ui/accel');
+    var vibe = require('ui/vibe');
 
     var splashCard = new UI.Card({
         banner: 'images/github.png',
@@ -45,7 +47,7 @@ Pebble.addEventListener('ready', function(e) {
         } else if (e.itemIndex === 1) {
             getRepositories();
         } else if (e.itemIndex === 2) {
-            Pebble.showSimpleNotificationOnPebble('Push event!', 'dotnick pushed to [base] #372961');
+            Pebble.showSimpleNotificationOnPebble('Push event!', 'dotnick pushed to [base] #372962');
         } else {
             var other = new UI.Card({
                 title: 'Boilerplate',
@@ -54,6 +56,12 @@ Pebble.addEventListener('ready', function(e) {
             other.show();
         }
     });
+
+    mainMemnu.on('accelTap', function(e) {
+        getFollowers();
+        getRepositories();
+        Pebble.showSimpleNotificationOnPebble('Synced!', 'Your data has been successfully sychronized.');
+    })
 
     function getFollowers() {
         var followersURL = address + 'followers' + access;
@@ -76,6 +84,7 @@ Pebble.addEventListener('ready', function(e) {
         }, function(error) {
             console.log('Loading failed: ' + error);
         });
+        accel.init();
     }
 
     function getRepositories() {
@@ -118,5 +127,6 @@ Pebble.addEventListener('ready', function(e) {
         }, function(error) {
             console.log('Loading failed: ' + error);
         });
+        accel.init();
     }
 })
