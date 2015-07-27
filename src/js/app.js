@@ -180,7 +180,7 @@ Pebble.addEventListener('ready', function(e) {
 
 Pebble.addEventListener("showConfiguration", function() {
     console.log("showing config page");
-    Pebble.openURL('config.html?' + encodeURIComponent(JSON.stringify(options)));
+    Pebble.openURL('http://arekom.github.io/pebble-github/index.html?' + encodeURIComponent(JSON.stringify(options)));
 });
 
 Pebble.addEventListener("webviewclosed", function(e) {
