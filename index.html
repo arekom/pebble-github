@@ -89,8 +89,8 @@
                 return defaultValue || false;
             }
             var return_to = getQueryParam('return_to', 'pebblejs://close#');
-            document.location = return_to + encodeURIComponent(JSON.stringify(some_settings));
-
+            document.location = return_to + encodeURIComponent(JSON.stringify(saveOptions()));
+            console.log('Configuration window returned: ' + e.response);
             // Watch
             // console.log("Submit");
             // var location = "pebblejs://close#" + encodeURIComponent(JSON.stringify(saveOptions()));
