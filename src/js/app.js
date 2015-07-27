@@ -1,5 +1,9 @@
-// check if ready
+var initialized = false;
+var options = {};
+
 Pebble.addEventListener('ready', function(e) {
+    initialized = true;
+
     var address = 'https://api.github.com/users/arekom/';
     var access = '?client_id=&client_secret=';
 
@@ -48,11 +52,10 @@ Pebble.addEventListener('ready', function(e) {
             getRepositories();
         } else if (e.itemIndex === 2) {
             getNotifications();
-            // Pebble.showSimpleNotificationOnPebble();
         } else {
             var other = new UI.Card({
-                title: 'Boilerplate',
-                body: 'Random card body'
+                title: 'Settings',
+                body: 'Display settings chosen from external configuration page'
             });
             other.show();
         }
@@ -172,5 +175,21 @@ Pebble.addEventListener('ready', function(e) {
             console.log('Loading failed: ' + error);
         });
         accel.init();
+    }
+});
+
+Pebble.addEventListener("showConfiguration", function() {
+    console.log("showing config page");
+    Pebble.openURL('config.html?' + encodeURIComponent(JSON.stringify(options)));
+});
+
+Pebble.addEventListener("webviewclosed", function(e) {
+    console.log("config page closed");
+    //Using primitive JSON validity and non-empty check
+    if (e.response.charAt(0) == "{" && e.response.slice(-1) == "}" && e.response.length > 5) {
+        options = JSON.parse(decodeURIComponent(e.response));
+        console.log("Options = " + JSON.stringify(options));
+    } else {
+        console.log("Cancelled");
     }
 });
