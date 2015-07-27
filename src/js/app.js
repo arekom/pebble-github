@@ -1,7 +1,7 @@
 // check if ready
 Pebble.addEventListener('ready', function(e) {
     var address = 'https://api.github.com/users/arekom/';
-    var access = '?client_id=ITS&client_secret=GONE';
+    var access = '?client_id=&client_secret=';
 
     var UI = require('ui');
     var ajax = require('ajax');
@@ -9,12 +9,12 @@ Pebble.addEventListener('ready', function(e) {
     var vibe = require('ui/vibe');
 
     var splashCard = new UI.Card({
-        banner: 'images/github.png',
+        // banner: 'images/github.png',
         bodyColor: 'tiffanyBlue'
     });
     splashCard.show();
 
-    var mainMemnu = new UI.Menu({
+    var mainMenu = new UI.Menu({
         backgroundColor: 'tiffanyBlue',
         textColor: 'black',
         highlightTextColor: 'white',
@@ -27,7 +27,7 @@ Pebble.addEventListener('ready', function(e) {
                 title: 'Repositories',
                 icon: 'images/repos.png'
             }, {
-                title: 'Notifications',
+                title: 'Events',
                 icon: 'images/email.png'
             }, {
                 title: 'Settings',
@@ -38,16 +38,17 @@ Pebble.addEventListener('ready', function(e) {
 
     setTimeout(function() {
         splashCard.hide();
-        mainMemnu.show();
+        mainMenu.show();
     }, 1000)
 
-    mainMemnu.on('select', function(e) {
+    mainMenu.on('select', function(e) {
         if (e.itemIndex === 0) {
             getFollowers();
         } else if (e.itemIndex === 1) {
             getRepositories();
         } else if (e.itemIndex === 2) {
-            Pebble.showSimpleNotificationOnPebble('Push event!', 'dotnick pushed to [base] #372962');
+            getNotifications();
+            // Pebble.showSimpleNotificationOnPebble();
         } else {
             var other = new UI.Card({
                 title: 'Boilerplate',
@@ -57,11 +58,54 @@ Pebble.addEventListener('ready', function(e) {
         }
     });
 
-    mainMemnu.on('accelTap', function(e) {
+    mainMenu.on('accelTap', function(e) {
         getFollowers();
         getRepositories();
         Pebble.showSimpleNotificationOnPebble('Synced!', 'Your data has been successfully sychronized.');
-    })
+        setTimeout(function(e) {
+            mainMenu.show();
+        }, 1000);
+    });
+
+    function getNotifications() {
+        var eventsURL = address + 'events' + access;
+        var parseEvents = function(json) {
+            var events = [];
+            for (var i = 0; i < json.length; i++) {
+                var title = json[i].type;
+                var subtitle = "by: " + json[i].actor.login;
+                events.push({
+                    title: title,
+                    subtitle: subtitle
+                });
+            };
+            return events;
+        }
+        ajax({
+            url: eventsURL,
+            type: 'json'
+        }, function(json) {
+            var eventItems = parseEvents(json, 10);
+            var eventsResultList = new UI.Menu({
+                backgroundColor: 'tiffanyBlue',
+                textColor: 'black',
+                highlightTextColor: 'white',
+                sections: [{
+                    title: 'Latest Events',
+                    items: eventItems
+                }]
+            });
+            eventsResultList.on('select', function(e) {
+                var detailsEvent = new UI.Card({
+                    body: 'Repo: ' + json[e.itemIndex].repo.name + '\n' + 'Message: ' + json[e.itemIndex].payload.commits[0].message
+                });
+                detailsEvent.show();
+            });
+            eventsResultList.show();
+        }, function(error) {
+            console.log('Loading failed: ' + error)
+        })
+    }
 
     function getFollowers() {
         var followersURL = address + 'followers' + access;
@@ -89,7 +133,7 @@ Pebble.addEventListener('ready', function(e) {
 
     function getRepositories() {
         var reposURL = address + 'repos' + access;
-        var parseFeed = function(json) {
+        var parseRepos = function(json) {
             var items = [];
             for (var i = 0; i < json.length; i++) {
                 var title = json[i].name;
@@ -106,14 +150,14 @@ Pebble.addEventListener('ready', function(e) {
             url: reposURL,
             type: 'json'
         }, function(json) {
-            var menuItems = parseFeed(json, 10);
+            var repoItems = parseRepos(json, 10);
             var repoResultList = new UI.Menu({
                 backgroundColor: 'tiffanyBlue',
                 textColor: 'black',
                 highlightTextColor: 'white',
                 sections: [{
                     title: 'Repositories',
-                    items: menuItems
+                    items: repoItems
                 }]
             });
             repoResultList.on('select', function(e) {
@@ -129,4 +173,4 @@ Pebble.addEventListener('ready', function(e) {
         });
         accel.init();
     }
-})
+});
