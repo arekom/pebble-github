@@ -20,26 +20,6 @@
                 <label for="name">Name:</label>
                 <textarea cols="40" rows="8" name="name" id="name"></textarea>
             </div>
-            <div data-role="fieldcontain">
-                <label for="special-feature">Activate special feature:</label>
-                <select name="special-feature" id="special-feature" data-role="slider">
-                    <option value="off">Off</option>
-                    <option value="on">On</option>
-                </select>
-            </div>
-            <div data-role="fieldcontain">
-                <fieldset data-role="controlgroup">
-                    <legend>Choose as many snacks as you'd like:</legend>
-                    <input type="checkbox" name="checkbox-cheetos" id="checkbox-cheetos" class="custom" />
-                    <label for="checkbox-cheetos">Cheetos</label>
-                    <input type="checkbox" name="checkbox-doritos" id="checkbox-doritos" class="custom" />
-                    <label for="checkbox-doritos">Doritos</label>
-                    <input type="checkbox" name="checkbox-fritos" id="checkbox-fritos" class="custom" />
-                    <label for="checkbox-fritos">Fritos</label>
-                    <input type="checkbox" name="checkbox-sunchips" id="checkbox-sunchips" class="custom" />
-                    <label for="checkbox-sunchips">Sun Chips</label>
-                </fieldset>
-            </div>
         </div>
         <div class="ui-body ui-body-b">
             <fieldset class="ui-grid-a">
@@ -61,10 +41,6 @@
         $('textarea, select, [type="hidden"], [type="password"], [type="text"]').each(function() {
                 options[$(this).attr('id')] = $(this).val();
             })
-            //Add all checkbox type values
-        $('[type="radio"], [type="checkbox"]').each(function() {
-            options[$(this).attr('id')] = $(this).is(':checked');
-        })
         return options;
     }
     $().ready(function() {

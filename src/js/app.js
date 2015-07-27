@@ -4,7 +4,8 @@ var options = {};
 Pebble.addEventListener('ready', function(e) {
     initialized = true;
 
-    var address = 'https://api.github.com/users/arekom/';
+    var USERNAME_FROM_SETTINGS = settings.USERNAME;
+    var address = 'https://api.github.com/users/' + USERNAME_FROM_SETTINGS + '/';
     var access = '?client_id=&client_secret=';
 
     var UI = require('ui');
@@ -14,7 +15,8 @@ Pebble.addEventListener('ready', function(e) {
 
     var splashCard = new UI.Card({
         // banner: 'images/github.png',
-        bodyColor: 'tiffanyBlue'
+        bodyColor: 'tiffanyBlue',
+        body: 'Hello ' + USERNAME_FROM_SETTINGS
     });
     splashCard.show();
 
@@ -33,9 +35,6 @@ Pebble.addEventListener('ready', function(e) {
             }, {
                 title: 'Events',
                 icon: 'images/email.png'
-            }, {
-                title: 'Settings',
-                icon: 'images/settings.png'
             }]
         }]
     })
@@ -54,8 +53,8 @@ Pebble.addEventListener('ready', function(e) {
             getNotifications();
         } else {
             var other = new UI.Card({
-                title: 'Settings',
-                body: 'Display settings chosen from external configuration page'
+                title: 'Placeholder Card',
+                body: 'Display random data'
             });
             other.show();
         }
@@ -179,16 +178,22 @@ Pebble.addEventListener('ready', function(e) {
 });
 
 Pebble.addEventListener("showConfiguration", function() {
-    console.log("showing config page");
     Pebble.openURL('http://arekom.github.io/pebble-github/index.html?' + encodeURIComponent(JSON.stringify(options)));
 });
 
 Pebble.addEventListener("webviewclosed", function(e) {
-    console.log("config page closed");
     //Using primitive JSON validity and non-empty check
     if (e.response.charAt(0) == "{" && e.response.slice(-1) == "}" && e.response.length > 5) {
         options = JSON.parse(decodeURIComponent(e.response));
-        console.log("Options = " + JSON.stringify(options));
+        console.log(options)
+        var settings = {
+            'USERNAME': options[username]
+        }
+        Pebble.sendAppMessage(settings, function() {
+            console.log('Data sent successfully');
+        }, function() {
+            console.log('Failed to sent data');
+        })
     } else {
         console.log("Cancelled");
     }
