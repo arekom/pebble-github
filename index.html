@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Config</title>
+    <title>Configurable</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
@@ -13,12 +13,32 @@
 <body>
     <div data-role="page" id="main">
         <div data-role="header" class="jqm-header">
-            <h1>Config Pebble App</h1>
+            <h1>Configurable Pebble App</h1>
         </div>
         <div data-role="content">
             <div data-role="fieldcontain">
                 <label for="name">Name:</label>
                 <textarea cols="40" rows="8" name="name" id="name"></textarea>
+            </div>
+            <div data-role="fieldcontain">
+                <label for="special-feature">Activate special feature:</label>
+                <select name="special-feature" id="special-feature" data-role="slider">
+                    <option value="off">Off</option>
+                    <option value="on">On</option>
+                </select>
+            </div>
+            <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup">
+                    <legend>Choose as many snacks as you'd like:</legend>
+                    <input type="checkbox" name="checkbox-cheetos" id="checkbox-cheetos" class="custom" />
+                    <label for="checkbox-cheetos">Cheetos</label>
+                    <input type="checkbox" name="checkbox-doritos" id="checkbox-doritos" class="custom" />
+                    <label for="checkbox-doritos">Doritos</label>
+                    <input type="checkbox" name="checkbox-fritos" id="checkbox-fritos" class="custom" />
+                    <label for="checkbox-fritos">Fritos</label>
+                    <input type="checkbox" name="checkbox-sunchips" id="checkbox-sunchips" class="custom" />
+                    <label for="checkbox-sunchips">Sun Chips</label>
+                </fieldset>
             </div>
         </div>
         <div class="ui-body ui-body-b">
@@ -41,6 +61,10 @@
         $('textarea, select, [type="hidden"], [type="password"], [type="text"]').each(function() {
                 options[$(this).attr('id')] = $(this).val();
             })
+            //Add all checkbox type values
+        $('[type="radio"], [type="checkbox"]').each(function() {
+            options[$(this).attr('id')] = $(this).is(':checked');
+        })
         return options;
     }
     $().ready(function() {
@@ -49,7 +73,6 @@
             document.location = "pebblejs://close";
         });
         $("#b-submit").click(function() {
-            // SDK
             function getQueryParam(variable, defaultValue) {
                 // Find all URL parameters
                 var query = location.search.substring(1);
@@ -64,15 +87,17 @@
                 }
                 return defaultValue || false;
             }
-            var return_to = getQueryParam('return_to', 'pebblejs://close#');
-            document.location = return_to + encodeURIComponent(JSON.stringify(saveOptions()));
-            console.log('Configuration window returned: ' + e.response);
-            // Watch
-            // console.log("Submit");
+            
+            console.log("Submit");
+
             // var location = "pebblejs://close#" + encodeURIComponent(JSON.stringify(saveOptions()));
             // console.log("Warping to: " + location);
             // console.log(location);
             // document.location = location;
+
+            var return_to = getQueryParam('return_to', 'pebblejs://close#');
+            document.location = return_to + encodeURIComponent(JSON.stringify(saveOptions());
+
         });
         //Set form values to whatever is passed in.
         var obj = jQuery.parseJSON(decodeURIComponent(window.location.search.substring(1)));
