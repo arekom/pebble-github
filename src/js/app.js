@@ -2,6 +2,7 @@ var initialized = false;
 var options = {};
 
 Pebble.addEventListener('ready', function(e) {
+    console.log("ready called!");
     initialized = true;
 
     var address = 'https://api.github.com/users/arekom/';
@@ -179,16 +180,18 @@ Pebble.addEventListener('ready', function(e) {
 });
 
 Pebble.addEventListener("showConfiguration", function() {
-    console.log("showing config page");
+    console.log("showing configuration");
     Pebble.openURL('http://arekom.github.io/pebble-github/index.html?' + encodeURIComponent(JSON.stringify(options)));
 });
 
 Pebble.addEventListener("webviewclosed", function(e) {
-    console.log("config page closed");
-    //Using primitive JSON validity and non-empty check
-    if (e.response.charAt(0) == "{" && e.response.slice(-1) == "}" && e.response.length > 5) {
+    console.log("configuration closed");
+    if (e.response) {
         options = JSON.parse(decodeURIComponent(e.response));
-        console.log("Options = " + JSON.stringify(options));
+        var result = JSON.stringify(options);
+        var res = JSON.parse(result);
+        username = res.name;
+        console.log(username);
     } else {
         console.log("Cancelled");
     }

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Config</title>
+    <title>Configurable</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
@@ -13,7 +13,7 @@
 <body>
     <div data-role="page" id="main">
         <div data-role="header" class="jqm-header">
-            <h1>Config Pebble App</h1>
+            <h1>Configurable Pebble App</h1>
         </div>
         <div data-role="content">
             <div data-role="fieldcontain">
@@ -73,7 +73,6 @@
             document.location = "pebblejs://close";
         });
         $("#b-submit").click(function() {
-            // SDK
             function getQueryParam(variable, defaultValue) {
                 // Find all URL parameters
                 var query = location.search.substring(1);
@@ -88,15 +87,17 @@
                 }
                 return defaultValue || false;
             }
-            var return_to = getQueryParam('return_to', 'pebblejs://close#');
-            document.location = return_to + encodeURIComponent(JSON.stringify(saveOptions()));
-            console.log('Configuration window returned: ' + e.response);
-            // Watch
-            // console.log("Submit");
+            
+            console.log("Submit");
+
             // var location = "pebblejs://close#" + encodeURIComponent(JSON.stringify(saveOptions()));
             // console.log("Warping to: " + location);
             // console.log(location);
             // document.location = location;
+
+            var return_to = getQueryParam('return_to', 'pebblejs://close#');
+            document.location = return_to + encodeURIComponent(JSON.stringify(saveOptions());
+
         });
         //Set form values to whatever is passed in.
         var obj = jQuery.parseJSON(decodeURIComponent(window.location.search.substring(1)));
